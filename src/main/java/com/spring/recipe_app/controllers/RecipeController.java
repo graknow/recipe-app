@@ -1,6 +1,5 @@
 package com.spring.recipe_app.controllers;
 
-import com.spring.recipe_app.connections.RecipeRepository;
 import com.spring.recipe_app.models.Recipe;
 import com.spring.recipe_app.services.interfaces.RecipeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/v1")
 public class RecipeController
 {
     @Autowired
@@ -20,28 +19,37 @@ public class RecipeController
 
     @GetMapping("/recipe/all")
     @ResponseBody
-    public List<Recipe> getAll()
+    public ResponseEntity<List<Recipe>> getAll()
     {
-        return recipeService.getAll();
+        return new ResponseEntity<>(recipeService.getRecipes(), HttpStatus.OK);
     }
 
     @GetMapping("/recipe/{id}")
     @ResponseBody
-    public Optional<Recipe> getOne(@PathVariable String id)
+    public ResponseEntity<Optional<Recipe>> getById(@PathVariable Integer id)
     {
-        try
-        {
-            return recipeService.getOne(Integer.parseInt(id));
-        }
-        catch (NumberFormatException ex)
-        {
-            return Optional.empty();
-        }
+        return new ResponseEntity<>(recipeService.getRecipe(id), HttpStatus.OK);
     }
 
     @PostMapping("/recipe")
-    public ResponseEntity<HttpStatus> postOne(@RequestBody Recipe recipe)
+    public ResponseEntity<Integer> postOne(@RequestBody Recipe recipe)
     {
-        return ResponseEntity.ok(HttpStatus.OK);
+        var result = recipeService.saveRecipe(recipe);
+
+        if (result != null)
+            return new ResponseEntity<>(result.getId(), HttpStatus.OK);
+
+        return new ResponseEntity<>(-1, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @DeleteMapping("/recipe/{id}")
+    public ResponseEntity<Integer> deleteById(@PathVariable Integer id)
+    {
+        var isRemoved = recipeService.deleteRecipe(id);
+
+        if (isRemoved)
+            return new ResponseEntity<Integer>(id, HttpStatus.OK);
+
+        return new ResponseEntity<Integer>(id, HttpStatus.NOT_FOUND);
     }
 }

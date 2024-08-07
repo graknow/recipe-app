@@ -7,9 +7,10 @@ import java.util.Optional;
 
 public interface RecipeService
 {
-    List<Recipe> getAll();
-    List<Recipe> getQuery();
-    Optional<Recipe> getOne(int id);
+    List<Recipe> getRecipes();
+    Optional<Recipe> getRecipe(int id);
 
-    boolean saveOne(Recipe recipe);
+    Recipe saveRecipe(Recipe recipe);
+
+    Boolean deleteRecipe(int id);
 }

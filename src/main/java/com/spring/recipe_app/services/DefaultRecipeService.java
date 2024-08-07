@@ -14,26 +14,41 @@ public class DefaultRecipeService implements RecipeService
     private RecipeRepository recipeRepo;
 
     @Override
-    public List<Recipe> getAll()
+    public List<Recipe> getRecipes()
     {
         return recipeRepo.findAll();
     }
 
     @Override
-    public List<Recipe> getQuery()
-    {
-        return List.of();
-    }
-
-    @Override
-    public Optional<Recipe> getOne(int id)
+    public Optional<Recipe> getRecipe(int id)
     {
         return recipeRepo.findById(id);
     }
 
     @Override
-    public boolean saveOne(Recipe recipe)
+    public Recipe saveRecipe(Recipe recipe)
     {
-        return true;
+        try
+        {
+            return recipeRepo.save(recipe);
+        }
+        catch (Exception ex)
+        {
+            return null;
+        }
+    }
+
+    @Override
+    public Boolean deleteRecipe(int id)
+    {
+        try
+        {
+            recipeRepo.deleteById(id);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            return false;
+        }
     }
 }
