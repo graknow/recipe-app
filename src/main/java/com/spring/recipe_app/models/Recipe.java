@@ -1,4 +1,4 @@
-package com.spring.recipe_app.model;
+package com.spring.recipe_app.models;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
